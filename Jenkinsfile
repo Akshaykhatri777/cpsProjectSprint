@@ -12,8 +12,8 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                bat 'pip install -r requirements.txt'
-                bat 'pip install pytest-html'
+                bat 'python -m pip install -r requirements.txt'
+                bat 'python -m pip install pytest-html'
             }
         }
 

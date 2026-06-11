@@ -1,4 +1,6 @@
 from selenium.webdriver.common.by import By
+from time import sleep
+from config.env import ConfigReader
 from pages.base_page import BasePage
 from selenium.webdriver.support.ui import WebDriverWait
 
@@ -25,3 +27,20 @@ class LoginPage(BasePage):
 
     def click_submit(self):
         self.click(self.login_submit)
+
+    def login(self):
+        config = ConfigReader.read_config()["qa"]
+
+        username = config["username"]
+        password = config["passwd"]
+
+        # get_logger().info("Testing invalid login with username: %s", username)
+
+        self.scroll()
+        self.click_login()
+        sleep(1)
+
+        self.scroll()
+        self.enter_username(username)
+        self.enter_password(password)
+        self.click_submit()

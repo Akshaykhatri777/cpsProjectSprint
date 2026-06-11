@@ -47,15 +47,15 @@ def test_valid_login(setup_and_teardown):
     get_logger().info("Testing valid login with username: %s", username)
 
 
-    # sleep(2)
-    # lp.click_login()
+    sleep(2)
+    lp.click_login()
 
     sleep(1)
     lp.scroll()
     lp.enter_username(username)
     lp.enter_password(password)
     lp.click_submit()
-    sleep(1)
+    sleep(2)
 
     assert driver.current_url == "https://practice.expandtesting.com/notes/app"
 

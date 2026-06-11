@@ -7,7 +7,7 @@ from pages.login_page import LoginPage
 from selenium.webdriver.common.by import By
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def setup_and_teardown():
     base_url = ConfigReader.read_config()["qa"]["base_url"]
 

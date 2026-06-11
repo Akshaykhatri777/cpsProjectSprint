@@ -1,5 +1,6 @@
 from config.env import ConfigReader
 from pages.home_page import HomePage
+from pages.login_page import LoginPage
 
 from time import sleep
 
@@ -15,6 +16,10 @@ def test_addnote(setup_and_teardown):
     category = config["category"]
     title = config["note_title"]
     desc = config["note_desc"]
+
+    lp = LoginPage(driver)
+    lp.login()
+    sleep(2)
 
     hp.click_add()
     sleep(1)
@@ -35,6 +40,10 @@ def test_addnote2(setup_and_teardown):
     category = config["category"]
     title = config["note_title"]
     desc = config["note_desc"]
+
+    lp = LoginPage(driver)
+    lp.login()
+    sleep(2)
 
     sleep(5)
     hp.click_add()

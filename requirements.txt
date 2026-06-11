@@ -1,0 +1,11 @@
+pytest
+selenium
+webdriver-manager
+openpyxl
+pyyaml
+requests
+undetected-chromedriver
+setuptools
+
+pytest-xdist
+pytest-html

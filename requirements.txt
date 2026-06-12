@@ -9,3 +9,4 @@ setuptools
 
 pytest-xdist
 pytest-html
+pytest-order

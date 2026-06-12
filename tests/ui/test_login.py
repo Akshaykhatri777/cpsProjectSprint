@@ -1,3 +1,5 @@
+import pytest
+
 from config.env import ConfigReader
 from pages.login_page import LoginPage
 from time import sleep
@@ -5,8 +7,8 @@ from time import sleep
 from utils.screenshot import take_screenshot
 from utils.loggers import get_logger
 
-
-
+@pytest.mark.ui
+@pytest.mark.order(1)
 def test_invalid_login(setup_and_teardown):
     driver = setup_and_teardown
     lp = LoginPage(driver)
@@ -35,6 +37,8 @@ def test_invalid_login(setup_and_teardown):
 
     # driver.refresh()
 
+@pytest.mark.ui
+@pytest.mark.order(2)
 def test_valid_login(setup_and_teardown):
     driver = setup_and_teardown
     lp = LoginPage(driver)

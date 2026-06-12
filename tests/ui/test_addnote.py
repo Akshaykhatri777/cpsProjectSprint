@@ -1,3 +1,5 @@
+import pytest
+
 from config.env import ConfigReader
 from pages.home_page import HomePage
 from pages.login_page import LoginPage
@@ -6,8 +8,9 @@ from time import sleep
 
 from utils.screenshot import take_screenshot
 
-
-def test_addnote(setup_and_teardown):
+@pytest.mark.ui
+@pytest.mark.order(3)
+def test_add_note(setup_and_teardown):
     driver = setup_and_teardown
     hp = HomePage(driver)
 
@@ -31,7 +34,10 @@ def test_addnote(setup_and_teardown):
     assert hp.validate_title() == "Test Note","Note not created"
     assert hp.validate_description() == "This is a test note","Note description not matching"
 
-def test_addnote2(setup_and_teardown):
+
+@pytest.mark.ui
+@pytest.mark.order(4)
+def test_add_note2(setup_and_teardown):
     driver = setup_and_teardown
     hp = HomePage(driver)
 

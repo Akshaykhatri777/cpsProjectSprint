@@ -25,3 +25,10 @@ class APIClient:
             url=f"{self.base_url}{endpoint}",
             headers=headers
         )
+
+    def put(self, endpoint, payload=None, headers=None):
+        return self.session.put(
+            url=f"{self.base_url}{endpoint}",
+            json=payload,
+            headers=headers
+        )

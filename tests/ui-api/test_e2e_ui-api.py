@@ -1,57 +1,66 @@
-from time import sleep
 import pytest
-
-from api.auth_api import AuthAPI
-from api.notes_api import NotesAPI
+from time import sleep
 from config.env import ConfigReader
-from selenium.webdriver.common.by import By
 from pages.login_page import LoginPage
+from selenium.webdriver.common.by import By
+
 
 @pytest.mark.order(12)
-def test_e2e(setup_and_teardown):
-	"""Simple E2E: create via API, delete via API, verify absent on UI."""
-	driver = setup_and_teardown
-	cfg = ConfigReader.read_config()["qa"]
+def test_e2e(setup_and_teardown, api_client):
+    """
+    Create note via API,
+    Delete note via API,
+    Validate note is not visible on UI.
+    """
 
-	# API clients
-	auth = AuthAPI(cfg["api_base_url"])
-	notes = NotesAPI(cfg["api_base_url"])
+    driver = setup_and_teardown
 
-	# 1) Login via API and get token
-	r = auth.login(cfg["username"], cfg["passwd"])
-	assert r.status_code == 200
-	token = r.json()["data"]["token"]
+    token = api_client["token"]
+    notes_api = api_client["notes_api"]
 
-	# 2) Create note via API
-	payload = {"title": "E2E Delete Note", "description": "will be deleted", "category": "Home"}
-	cr = notes.create_note(token, payload)
-	assert cr.status_code == 200
-	note_id = cr.json()["data"]["id"]
-	note_title = cr.json()["data"]["title"]
+    # Step 1: Create note via API
+    payload = {
+        "title": "E2E Delete Note",
+        "description": "will be deleted",
+        "category": "Home"
+    }
 
-	# 3) Delete via API
-	dr = notes.delete_note(note_id, token)
-	assert dr.status_code in (200, 204)
+    create_response = notes_api.create_note(token, payload)
+    assert create_response.status_code == 200
 
-	# 4) Confirm backend: note not in GET /notes
-	gr = notes.get_all_notes(token)
-	assert gr.status_code == 200
-	ids = [n["id"] for n in gr.json()["data"]]
-	assert note_id not in ids
+    note_id = create_response.json()["data"]["id"]
+    note_title = create_response.json()["data"]["title"]
 
-	# 5) UI: login with UI so the browser session shows the user's notes
-	lp = LoginPage(driver)
-	lp.login()
-	sleep(2)
+    # Step 2: Delete note via API
+    delete_response = notes_api.delete_note(note_id, token)
+    assert delete_response.status_code in (200, 204)
 
-	# navigate to app base URL and refresh
-	if driver.current_url != cfg["base_url"]:
-		driver.get(cfg["base_url"])
-		sleep(1)
-	driver.refresh()
-	sleep(2)
+    # Step 3: Verify note deleted from backend
+    get_response = notes_api.get_all_notes(token)
+    assert get_response.status_code == 200
 
-	elems = driver.find_elements(By.XPATH, '//div[@data-testid="note-card-title"]')
-	titles = [e.text for e in elems]
+    notes = get_response.json()["data"]
+    ids = [note["id"] for note in notes]
 
-	assert note_title not in titles, f"Deleted note still visible in UI: {note_title}"
+    assert note_id not in ids, "Deleted note still exists in API response"
+
+    # Step 4: Login via UI
+    lp = LoginPage(driver)
+    lp.login()
+    sleep(2)
+
+    # Step 5: Refresh notes page
+    driver.refresh()
+    sleep(2)
+
+    # Step 6: Verify deleted note not present on UI
+    note_titles = driver.find_elements(
+        By.XPATH,
+        '//div[@data-testid="note-card-title"]'
+    )
+
+    titles = [note.text for note in note_titles]
+
+    assert note_title not in titles, (
+        f"Deleted note still visible in UI: {note_title}"
+    )

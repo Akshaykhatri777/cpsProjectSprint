@@ -25,3 +25,22 @@ def test_create_note(api_client):
     assert response_data["title"] == payload["title"]
     assert response_data["description"] == payload["description"]
     assert response_data["category"] == payload["category"]
+
+
+@pytest.mark.api
+@pytest.mark.order(9)
+def test_create_note_invalid(api_client):
+
+    token = api_client["token"]
+    notes_api = api_client["notes_api"]
+
+    payload = {
+        "title": "",
+        "description": "Test Description",
+        "category": "Home"
+    }
+
+    response = notes_api.create_note(token, payload)
+
+    assert response.status_code == 400
+    assert "Title" in response.json()["message"]

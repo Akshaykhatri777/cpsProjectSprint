@@ -3,7 +3,7 @@ import time
 
 
 @pytest.mark.api
-@pytest.mark.order(9)
+@pytest.mark.order(10)
 def test_get_all_notes(api_client):
 
     token = api_client["token"]

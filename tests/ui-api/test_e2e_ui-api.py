@@ -5,7 +5,7 @@ from pages.login_page import LoginPage
 from selenium.webdriver.common.by import By
 
 
-@pytest.mark.order(12)
+@pytest.mark.order(14)
 def test_e2e(setup_and_teardown, api_client):
     """
     Create note via API,

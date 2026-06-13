@@ -5,7 +5,7 @@ from pages.login_page import LoginPage
 from pages.home_page import HomePage
 from time import sleep
 
-@pytest.mark.order(13)
+@pytest.mark.order(15)
 def test_validate_note(setup_and_teardown, api_client):
     """Create a note via UI, then validate it exists via API."""
     driver = setup_and_teardown

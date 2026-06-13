@@ -1,6 +1,6 @@
 import pytest
 @pytest.mark.api
-@pytest.mark.order(10)
+@pytest.mark.order(11)
 def test_delete_note_api(api_client):
 
     notes_api = api_client["notes_api"]
